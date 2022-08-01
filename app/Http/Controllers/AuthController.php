@@ -34,4 +34,27 @@ class AuthController extends Controller
 
         return response()->json(['data'=>$user,'access_token'=>$token,'token_type'=>'Bearer']);
     }
+
+    public function login( Request $request ){
+        if(!Auth::attempt($request -> only('email','password'))){
+            return response()->download(['message'=>'Unauthorized'],401);
+        }
+
+        $user= User::where('email',$request['email'])-> firstOrFail();
+        $token= $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message'=> "hi ".$user->name,
+            'accessToken'=>$token,
+            'token_type'=>'Bearer',
+            'user'=>$user
+        ]);
+    }
+
+    public function logout(){
+        auth()->user()->tokens()->delete();
+        return response()->json([
+            'message'=>"You have successfully logged out and the token was successfully deleted"
+        ]);
+    }
 }

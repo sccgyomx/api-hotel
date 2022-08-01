@@ -14,4 +14,3 @@ use App\Http\Controllers\RoomController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::resource('rooms', RoomController::class);
